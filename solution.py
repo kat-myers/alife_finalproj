@@ -10,6 +10,10 @@ import constants as c
 class SOLUTION:
 
     def __init__(self, nextAvailableID):
+        """ init runs once every individual and their lineage, 
+        so a population = 5 gen = 1, init runs 5 times
+        population = 1 generation = 5, init runts 1 time"""
+        
         
         self.weights = 0
         self.myID = nextAvailableID
@@ -21,6 +25,12 @@ class SOLUTION:
         self.sensor_cubes = ['Torso']
         self.total_cubes = ['Torso']
 
+
+        """ In the lines below, I generate the initial body plan for the parent in each lineage
+        I generate the number of cubes / branch, each cube's size, and whether or not they are a sensor.
+        
+        I also generate the names of each cube and generate the joint_names so that these are able to be mutated in Mutate()"""
+        
         
         ### Initializing Cube Existence, Size, and Names
         self.cubes_b1 = []
@@ -32,8 +42,8 @@ class SOLUTION:
         # self.num_segments_3 = random.randint(0,3)
 
         self.num_segments_1 = 2
-        self.num_segments_2 = 1
-        self.num_segments_3 = 1
+        self.num_segments_2 = 2
+        self.num_segments_3 = 2
 
         self.cube_sizes_b1 = []
         self.cube_sizes_b2 = []
@@ -68,19 +78,19 @@ class SOLUTION:
                 self.joint_names.append("Torso_k"+str(0))
             if i < self.num_segments_3 - 1:
                 self.joint_names.append("k"+str(i)+'_'+ "k"+str(i+1))
-    
-
 
         self.torso_size = np.zeros(3)
         for x in range(3):
             self.torso_size[x] = random.uniform(.3,1) * 1.3
-        self.cube_sizes = random.uniform(.2,1) *.9
+        # self.cube_sizes = random.uniform(.2,1) *.9
 
         ### Initializing Cube Names
+        print('cubes, init')
         print(self.cubes_b1)
         print(self.cubes_b2)
         print(self.cubes_b3)
-        print(self.total_cubes)
+        print('end')
+        # print(self.total_cubes)
 
         
         ### Initializing Cube Sensoring
@@ -106,9 +116,6 @@ class SOLUTION:
             self.cube_sensors_b3.append(cube_sense)
             if self.cube_sensors_b3[i] == True:
                 self.sensor_cubes.append(self.cubes_b3[i])
-
-        ### append everything up here
-        ### make color arrays up here
     
 
       
@@ -116,13 +123,14 @@ class SOLUTION:
     def Set_ID(self, val): 
         self.myID = val
 
+
+
     def Start_Simulation(self, directOrGUI):
 
         self.Create_World()
         self.Create_Body()
         self.Create_Brain()
     
-        
         os.system("start /B py simulate.py " + str(directOrGUI) + " " + str(self.myID))
     
 
@@ -139,10 +147,14 @@ class SOLUTION:
         f.close()
         os.system("del " + "fitness" + str(self.myID) + ".txt")  
 
+
+
     def Create_World(self):
 
         pyrosim.Start_SDF("world.sdf")
         pyrosim.End()
+
+
 
     def Create_Body(self):
 
@@ -170,7 +182,6 @@ class SOLUTION:
                     # this joint has absolute coordinates
                     joint_position = [0, self.torso_size[1]/2, self.torso_size[2]*1.5]
                     pyrosim.Send_Joint(name = "Torso_i"+str(n) , parent= "Torso" , child = "i"+str(n) , type = "revolute", position = joint_position, jointAxis = '1 0 0', rpy = random.randint(0,3))
-                    #self.joint_names.append('Torso_i'+str(n))
         n = 0
         while n < self.num_segments_1:
 
@@ -189,7 +200,6 @@ class SOLUTION:
             if n < self.num_segments_1 - 1:
                 # relative to previous joint
                 pyrosim.Send_Joint(name = "i"+str(n)+'_'+ "i"+str(n+1), parent = "i"+str(n), child = "i"+str(n+1), type = "revolute", position = [0,self.cube_sizes_b1[n][1],0], jointAxis = "1 0 0", rpy = 1)
-                # self.joint_names.append("i"+str(n)+'_'+ "i"+str(n+1))
             n = n + 1
         
 
@@ -198,7 +208,6 @@ class SOLUTION:
         if self.num_segments_2 > 0:
             joint_position = [0, -self.torso_size[1]/2, self.torso_size[2]*1.5]
             pyrosim.Send_Joint(name = "Torso_j"+str(n) , parent= "Torso", child = 'j'+str(n) , type = "revolute", position = joint_position, jointAxis = "1 0 0", rpy = 3)
-            # self.joint_names.append("Torso_j"+str(n))
 
         n = 0
         while n < self.num_segments_2:
@@ -216,7 +225,6 @@ class SOLUTION:
             if n < self.num_segments_2 - 1:
                 # relative to previous joint
                 pyrosim.Send_Joint(name = "j"+str(n)+'_'+ "j"+str(n+1), parent = "j"+str(n), child = "j"+str(n+1), type = "revolute", position = [0,-self.cube_sizes_b2[n][1],0], jointAxis = "1 0 0", rpy = 1)
-                # self.joint_names.append("j"+str(n)+'_'+ "j"+str(n+1))
             n = n + 1
 
 
@@ -225,7 +233,6 @@ class SOLUTION:
         if self.num_segments_3 > 0:
             joint_position = [0, 0, self.torso_size[2]*2]
             pyrosim.Send_Joint(name = "Torso_k"+str(n) , parent= "Torso", child = 'k'+str(n) , type = "revolute", position = joint_position, jointAxis = "1 0 0", rpy = 3)
-            # self.joint_names.append("Torso_k"+str(n))
 
         n = 0
         while n < self.num_segments_3:
@@ -244,7 +251,6 @@ class SOLUTION:
             if n < self.num_segments_3 - 1:
                 # relative to previous joint
                 pyrosim.Send_Joint(name = "k"+str(n)+'_'+ "k"+str(n+1), parent = "k"+str(n), child = "k"+str(n+1), type = "revolute", position = [0,0,self.cube_sizes_b3[n][2]], jointAxis = "1 0 0", rpy = 1)
-                # self.joint_names.append("k"+str(n)+'_'+ "k"+str(n+1))
             n = n + 1
 
 
@@ -272,22 +278,27 @@ class SOLUTION:
         # self.total_cubes.remove('Torso')
         self.total_cubes.sort()
         for j, motor in enumerate(self.joint_names):
-            # print(j, motor)
-            # print('len joint names',len(self.joint_names))
             if motor == 'Torso':
                 pass
             else:
                 pyrosim.Send_Motor_Neuron(name = j + self.numSensors , jointName = self.joint_names[j])
 
         # all pairs of neurons must have synapses:
+        iterate = 0
         for currentRow in range(self.numSensors):
             for currentColumn in range(self.numMotors):
+                iterate = iterate + 1
+                print('iterate', str(iterate))
                 pyrosim.Send_Synapse(sourceNeuronName = currentRow, targetNeuronName = currentColumn + self.numSensors, weight = self.weights[currentRow][currentColumn])
 
-        # print(self.cubes_b1)
-        # print(self.cubes_b2)
-        # print(self.cubes_b3)
-        print(self.joint_names)
+        print('cubes and sensors, brain')
+        print(self.sensor_cubes)
+        print(self.cubes_b1)
+        print(self.cubes_b2)
+        print(self.cubes_b3)
+        #print(self.joint_names)
+        print(all_sensors)
+        print('end')
         pyrosim.End()
 
 
@@ -348,65 +359,7 @@ class SOLUTION:
             ## Change Size
 
 
-       
-       
-        ### EXTRA CODE that I might not need???    
     
-        # ## Segment 1 First Link
-        # n = 0
-        # if self.num_segments_1 > 0:    
-        #     if n == 0:
-        #         print('n',n)
-        #         # this joint has absolute coordinates
-        #         joint_position = [0, self.torso_size[1]/2, self.torso_size[2]*1.5]
-        #         pyrosim.Send_Joint(name = "Torso_i"+str(n) , parent= "Torso" , child = "i"+str(n) , type = "revolute", position = joint_position, jointAxis = '1 0 0', rpy = random.randint(0,3))
-        #         # size_dummy is for the branch cubes
-        #         size_dummy = np.zeros(3)
-        #         for x in range(3):
-        #             size_dummy[x] = random.uniform(0,1) * .9
-        #         cube_position = [np.random.uniform(-1,1)*size_dummy[0]/2,size_dummy[1]/2,np.random.uniform(-1,1)*size_dummy[2]/2]
-        #         pyrosim.Send_Cube(color_code = blue_code, color_name = blue_name,name = "i"+str(n), pos=cube_position , size=size_dummy)
-        #         self.cubes_b1 = ['i'+str(n)]
-        #         self.sensor_cubes.append(self.cubes_b1[0])
-        #         self.chosen_cubes.append(self.cubes_b1[0])
-
-        #         if self.num_segments_1 > 1:
-        #         # sending joint from link 0 to link 1
-        #             pyrosim.Send_Joint(name = "i"+str(n)+'_'+ "i"+str(n+1), parent = "i"+str(n), child = "i"+str(n+1), type = "revolute", position = [0,size_dummy[1],0], jointAxis = "1 0 0", rpy = 1)
-            
-        #     while n < self.num_segments_1:
-        #         print('n'+str(n))
-        #         size_dummy_1 = np.zeros(3)
-        #         for x in range(3):
-        #             size_dummy_1[x] = random.uniform(0,1) * .9
-        #         # relative to previous joint
-        #         cube_position = [np.random.uniform(-1,1)*size_dummy_1[0]/2,size_dummy_1[1]/2,np.random.uniform(-1,1)*size_dummy_1[2]/2]
-        #         pyrosim.Send_Cube(color_code = blue_code, color_name = blue_name,name = "i"+str(n), pos=cube_position , size=size_dummy_1)
-        #         if n < self.num_segments_1 - 1:
-        #             # relative to previous joint
-        #             pyrosim.Send_Joint(name = "i"+str(n)+'_'+ "i"+str(n+1), parent = "i"+str(n), child = "i"+str(n+1), type = "revolute", position = [0,-size_dummy_1[1],0], jointAxis = "1 0 0", rpy = 1)
-        #         self.cubes_b1.append('i'+str(n))
-        #         self.sensor_cubes.append(self.cubes_b1[n])
-        #         self.chosen_cubes.append(self.cubes_b1[n])
-        #         n = n + 1
-            #     # size_dummy_2 = np.zeros(3)
-        #     # for x in range(3):
-            #     size_dummy_2[x] = random.uniform(0,1) * .9
-            # cube_position = [np.random.uniform(-1,1)*size_dummy_2[0]/2,-size_dummy_2[1]/2,np.random.uniform(-1,1)*size_dummy_2[2]/2]
-            # pyrosim.Send_Cube(color_code = green_code, color_name = green_name,name = "Leg2", pos=cube_position , size=size_dummy_2)
-            # self.sensor_cubes.append('Leg2')
-            # self.chosen_cubes.append('Leg2')
-            # self.cubes_b2 = ['Leg2']
-            # self.sensor_cubes.append(self.cubes_b2[0])
-            # self.chosen_cubes.append(self.cubes_b2[0])
-
-            # # relative to previous joint
-            # size_dummy = np.zeros(3)
-            # for x in range(3):
-            #     size_dummy[x] = random.uniform(0,1) * .9   
-            # pyrosim.Send_Joint(name = "Leg2_LowerLeg2", parent = "Leg2", child = "LowerLeg2", type = "revolute", position = [0,-size_dummy[1],0], jointAxis = "1 0 0", rpy = 1)
-            # cube_position = [np.random.uniform(-1,1)*size_dummy[0]/2,-size_dummy[1]/2,np.random.uniform(-1,1)*size_dummy[2]/2]
-            # pyrosim.Send_Cube(color_code = green_code, color_name = green_name,name = "LowerLeg2", pos=cube_position , size=size_dummy)
 
 
 
