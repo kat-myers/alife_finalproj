@@ -38,28 +38,37 @@ class SOLUTION:
         self.cube_sizes_b1 = []
         self.cube_sizes_b2 = []
         self.cube_sizes_b3 = []
-
-        self.cube_names_b1 = []
-        self.cube_names_b2 = []
-        self.cube_names_b3 = []
         
         for i in range(self.num_segments_1):
             self.cube_size_rand =  [random.uniform(.2,1),random.uniform(.2,1),random.uniform(.2,1)]
             self.cube_sizes_b1.append(self.cube_size_rand)
-            self.cube_names_b1.append("i"+str(i))
+            self.cubes_b1.append("i"+str(i))
             self.total_cubes.append("i"+str(i))
+            if i == 0:
+                self.joint_names.append('Torso_i'+str(0))
+            if i < self.num_segments_1 - 1:
+                self.joint_names.append("i"+str(i)+'_'+ "i"+str(i+1))
 
         for i in range(self.num_segments_2):
             self.cube_size_rand =  [random.uniform(.2,1),random.uniform(.2,1),random.uniform(.2,1)]
             self.cube_sizes_b2.append(self.cube_size_rand)
-            self.cube_names_b2.append("j"+str(i))
+            self.cubes_b2.append("j"+str(i))
             self.total_cubes.append("j"+str(i))
+            if i == 0:
+                self.joint_names.append("Torso_j"+str(0))
+            if i < self.num_segments_2 - 1:
+                self.joint_names.append("j"+str(i)+'_'+ "j"+str(i+1))
         
         for i in range(self.num_segments_3):
             self.cube_size_rand =  [random.uniform(.2,1),random.uniform(.2,1),random.uniform(.2,1)]
             self.cube_sizes_b3.append(self.cube_size_rand)
-            self.cube_names_b3.append("k"+str(i))
+            self.cubes_b3.append("k"+str(i))
             self.total_cubes.append("k"+str(i))
+            if i == 0:
+                self.joint_names.append("Torso_k"+str(0))
+            if i < self.num_segments_3 - 1:
+                self.joint_names.append("k"+str(i)+'_'+ "k"+str(i+1))
+    
 
 
         self.torso_size = np.zeros(3)
@@ -68,9 +77,9 @@ class SOLUTION:
         self.cube_sizes = random.uniform(.2,1) *.9
 
         ### Initializing Cube Names
-        print(self.cube_names_b1)
-        print(self.cube_names_b2)
-        print(self.cube_names_b3)
+        print(self.cubes_b1)
+        print(self.cubes_b2)
+        print(self.cubes_b3)
         print(self.total_cubes)
 
         
@@ -83,20 +92,20 @@ class SOLUTION:
         for i in range(self.num_segments_1):
             cube_sense = random.choice((True,False))
             self.cube_sensors_b1.append(cube_sense)
-            # if self.cube_sensors_b1[i] == True:
-            #     self.sensor_cubes.append(self.cube_sensors_b1[i])
+            if self.cube_sensors_b1[i] == True:
+                self.sensor_cubes.append(self.cubes_b1[i])
 
         for i in range(self.num_segments_2):
             cube_sense = random.choice((True,False))
             self.cube_sensors_b2.append(cube_sense)
-            # if self.cube_sensors_b2[i] == True:
-            #     self.sensor_cubes.append(self.cube_sensors_b2[i])
+            if self.cube_sensors_b2[i] == True:
+                self.sensor_cubes.append(self.cubes_b2[i])
 
         for i in range(self.num_segments_3):
             cube_sense = random.choice((True,False))
             self.cube_sensors_b3.append(cube_sense)
-            # if self.cube_sensors_b3[i] == True:
-            #     self.sensor_cubes.append(self.cube_sensors_b3[i])
+            if self.cube_sensors_b3[i] == True:
+                self.sensor_cubes.append(self.cubes_b3[i])
 
         ### append everything up here
         ### make color arrays up here
@@ -161,17 +170,14 @@ class SOLUTION:
                     # this joint has absolute coordinates
                     joint_position = [0, self.torso_size[1]/2, self.torso_size[2]*1.5]
                     pyrosim.Send_Joint(name = "Torso_i"+str(n) , parent= "Torso" , child = "i"+str(n) , type = "revolute", position = joint_position, jointAxis = '1 0 0', rpy = random.randint(0,3))
-                    self.joint_names.append('Torso_i'+str(n))
+                    #self.joint_names.append('Torso_i'+str(n))
         n = 0
         while n < self.num_segments_1:
-            self.cubes_b1.append('i'+str(n))
-            #self.total_cubes.append(self.cubes_b1[n])
 
             # Color coding cubes
             if self.cube_sensors_b1[n] == True:
                 color_code = green_code
                 color_name = green_name
-                self.sensor_cubes.append(self.cubes_b1[n])
             elif self.cube_sensors_b1[n] == False:
                 color_code = blue_code
                 color_name = blue_name
@@ -183,7 +189,7 @@ class SOLUTION:
             if n < self.num_segments_1 - 1:
                 # relative to previous joint
                 pyrosim.Send_Joint(name = "i"+str(n)+'_'+ "i"+str(n+1), parent = "i"+str(n), child = "i"+str(n+1), type = "revolute", position = [0,self.cube_sizes_b1[n][1],0], jointAxis = "1 0 0", rpy = 1)
-                self.joint_names.append("i"+str(n)+'_'+ "i"+str(n+1))
+                # self.joint_names.append("i"+str(n)+'_'+ "i"+str(n+1))
             n = n + 1
         
 
@@ -192,18 +198,15 @@ class SOLUTION:
         if self.num_segments_2 > 0:
             joint_position = [0, -self.torso_size[1]/2, self.torso_size[2]*1.5]
             pyrosim.Send_Joint(name = "Torso_j"+str(n) , parent= "Torso", child = 'j'+str(n) , type = "revolute", position = joint_position, jointAxis = "1 0 0", rpy = 3)
-            self.joint_names.append("Torso_j"+str(n))
+            # self.joint_names.append("Torso_j"+str(n))
 
         n = 0
         while n < self.num_segments_2:
-            self.cubes_b2.append('j'+str(n))
-            #self.total_cubes.append(self.cubes_b2[n])
             
             # color coding links
             if self.cube_sensors_b2[n] == True:
                 color_code = green_code
                 color_name = green_name
-                self.sensor_cubes.append(self.cubes_b2[n])
             elif self.cube_sensors_b2[n] == False:
                 color_code = blue_code
                 color_name = blue_name
@@ -213,7 +216,7 @@ class SOLUTION:
             if n < self.num_segments_2 - 1:
                 # relative to previous joint
                 pyrosim.Send_Joint(name = "j"+str(n)+'_'+ "j"+str(n+1), parent = "j"+str(n), child = "j"+str(n+1), type = "revolute", position = [0,-self.cube_sizes_b2[n][1],0], jointAxis = "1 0 0", rpy = 1)
-                self.joint_names.append("j"+str(n)+'_'+ "j"+str(n+1))
+                # self.joint_names.append("j"+str(n)+'_'+ "j"+str(n+1))
             n = n + 1
 
 
@@ -222,18 +225,15 @@ class SOLUTION:
         if self.num_segments_3 > 0:
             joint_position = [0, 0, self.torso_size[2]*2]
             pyrosim.Send_Joint(name = "Torso_k"+str(n) , parent= "Torso", child = 'k'+str(n) , type = "revolute", position = joint_position, jointAxis = "1 0 0", rpy = 3)
-            self.joint_names.append("Torso_k"+str(n))
+            # self.joint_names.append("Torso_k"+str(n))
 
         n = 0
         while n < self.num_segments_3:
-            self.cubes_b3.append('k'+str(n))
-            #self.total_cubes.append(self.cubes_b3[n])
             
             # color coding links            
             if self.cube_sensors_b3[n] == True:
                 color_code = green_code
                 color_name = green_name
-                self.sensor_cubes.append(self.cubes_b3[n])
             elif self.cube_sensors_b3[n] == False:
                 color_code = blue_code
                 color_name = blue_name
@@ -244,7 +244,7 @@ class SOLUTION:
             if n < self.num_segments_3 - 1:
                 # relative to previous joint
                 pyrosim.Send_Joint(name = "k"+str(n)+'_'+ "k"+str(n+1), parent = "k"+str(n), child = "k"+str(n+1), type = "revolute", position = [0,0,self.cube_sizes_b3[n][2]], jointAxis = "1 0 0", rpy = 1)
-                self.joint_names.append("k"+str(n)+'_'+ "k"+str(n+1))
+                # self.joint_names.append("k"+str(n)+'_'+ "k"+str(n+1))
             n = n + 1
 
 
@@ -287,7 +287,7 @@ class SOLUTION:
         # print(self.cubes_b1)
         # print(self.cubes_b2)
         # print(self.cubes_b3)
-        # print(self.joint_names)
+        print(self.joint_names)
         pyrosim.End()
 
 
