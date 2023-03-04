@@ -17,12 +17,12 @@ class SOLUTION:
         self.numMotors = 0
         self.numSensors = 0
 
-        self.total_cubes = []
-        self.sensor_cubes = []
         self.joint_names = []
+        self.sensor_cubes = ['Torso']
+        self.total_cubes = ['Torso']
 
         
-        ### Initializing Cube Existence and Size
+        ### Initializing Cube Existence, Size, and Names
         self.cubes_b1 = []
         self.cubes_b2 = []
         self.cubes_b3 = []
@@ -39,22 +39,27 @@ class SOLUTION:
         self.cube_sizes_b2 = []
         self.cube_sizes_b3 = []
 
+        self.cube_names_b1 = []
+        self.cube_names_b2 = []
+        self.cube_names_b3 = []
         
         for i in range(self.num_segments_1):
             self.cube_size_rand =  [random.uniform(.2,1),random.uniform(.2,1),random.uniform(.2,1)]
             self.cube_sizes_b1.append(self.cube_size_rand)
+            self.cube_names_b1.append("i"+str(i))
+            self.total_cubes.append("i"+str(i))
 
         for i in range(self.num_segments_2):
             self.cube_size_rand =  [random.uniform(.2,1),random.uniform(.2,1),random.uniform(.2,1)]
             self.cube_sizes_b2.append(self.cube_size_rand)
-        
-        for i in range(self.num_segments_2):
-            self.cube_size_rand =  [random.uniform(.2,1),random.uniform(.2,1),random.uniform(.2,1)]
-            self.cube_sizes_b2.append(self.cube_size_rand)
+            self.cube_names_b2.append("j"+str(i))
+            self.total_cubes.append("j"+str(i))
         
         for i in range(self.num_segments_3):
             self.cube_size_rand =  [random.uniform(.2,1),random.uniform(.2,1),random.uniform(.2,1)]
             self.cube_sizes_b3.append(self.cube_size_rand)
+            self.cube_names_b3.append("k"+str(i))
+            self.total_cubes.append("k"+str(i))
 
 
         self.torso_size = np.zeros(3)
@@ -62,22 +67,40 @@ class SOLUTION:
             self.torso_size[x] = random.uniform(.3,1) * 1.3
         self.cube_sizes = random.uniform(.2,1) *.9
 
+        ### Initializing Cube Names
+        print(self.cube_names_b1)
+        print(self.cube_names_b2)
+        print(self.cube_names_b3)
+        print(self.total_cubes)
+
+        
         ### Initializing Cube Sensoring
         self.cube_sensors_b1 = []
         self.cube_sensors_b2 = []
         self.cube_sensors_b3 = []
 
+
         for i in range(self.num_segments_1):
             cube_sense = random.choice((True,False))
             self.cube_sensors_b1.append(cube_sense)
+            # if self.cube_sensors_b1[i] == True:
+            #     self.sensor_cubes.append(self.cube_sensors_b1[i])
 
         for i in range(self.num_segments_2):
             cube_sense = random.choice((True,False))
             self.cube_sensors_b2.append(cube_sense)
+            # if self.cube_sensors_b2[i] == True:
+            #     self.sensor_cubes.append(self.cube_sensors_b2[i])
 
         for i in range(self.num_segments_3):
             cube_sense = random.choice((True,False))
             self.cube_sensors_b3.append(cube_sense)
+            # if self.cube_sensors_b3[i] == True:
+            #     self.sensor_cubes.append(self.cube_sensors_b3[i])
+
+        ### append everything up here
+        ### make color arrays up here
+    
 
       
 
@@ -130,8 +153,7 @@ class SOLUTION:
         
         ### MAKE THE TORSO
         pyrosim.Send_Cube(color_code = green_code, color_name = green_name, name = "Torso", pos= [0,0,self.torso_size[2]*1.5], size= self.torso_size)
-        self.sensor_cubes = ['Torso']
-        self.total_cubes = ['Torso']
+        
 
         ### BRANCH 1
         n = 0
@@ -143,7 +165,7 @@ class SOLUTION:
         n = 0
         while n < self.num_segments_1:
             self.cubes_b1.append('i'+str(n))
-            self.total_cubes.append(self.cubes_b1[n])
+            #self.total_cubes.append(self.cubes_b1[n])
 
             # Color coding cubes
             if self.cube_sensors_b1[n] == True:
@@ -175,7 +197,7 @@ class SOLUTION:
         n = 0
         while n < self.num_segments_2:
             self.cubes_b2.append('j'+str(n))
-            self.total_cubes.append(self.cubes_b2[n])
+            #self.total_cubes.append(self.cubes_b2[n])
             
             # color coding links
             if self.cube_sensors_b2[n] == True:
@@ -190,7 +212,6 @@ class SOLUTION:
             pyrosim.Send_Cube(color_code = color_code, color_name = color_name,name = "j"+str(n), pos=cube_position , size=self.cube_sizes_b2[n])
             if n < self.num_segments_2 - 1:
                 # relative to previous joint
-                print('joint b2', "j"+str(n)+'_'+ "j"+str(n+1))
                 pyrosim.Send_Joint(name = "j"+str(n)+'_'+ "j"+str(n+1), parent = "j"+str(n), child = "j"+str(n+1), type = "revolute", position = [0,-self.cube_sizes_b2[n][1],0], jointAxis = "1 0 0", rpy = 1)
                 self.joint_names.append("j"+str(n)+'_'+ "j"+str(n+1))
             n = n + 1
@@ -206,7 +227,7 @@ class SOLUTION:
         n = 0
         while n < self.num_segments_3:
             self.cubes_b3.append('k'+str(n))
-            self.total_cubes.append(self.cubes_b3[n])
+            #self.total_cubes.append(self.cubes_b3[n])
             
             # color coding links            
             if self.cube_sensors_b3[n] == True:
@@ -222,12 +243,12 @@ class SOLUTION:
             pyrosim.Send_Cube(color_code = color_code, color_name = color_name,name = "k"+str(n), pos=cube_position , size=self.cube_sizes_b3[n])
             if n < self.num_segments_3 - 1:
                 # relative to previous joint
-                print('joint k', "k"+str(n)+'_'+ "k"+str(n+1))
                 pyrosim.Send_Joint(name = "k"+str(n)+'_'+ "k"+str(n+1), parent = "k"+str(n), child = "k"+str(n+1), type = "revolute", position = [0,0,self.cube_sizes_b3[n][2]], jointAxis = "1 0 0", rpy = 1)
                 self.joint_names.append("k"+str(n)+'_'+ "k"+str(n+1))
             n = n + 1
 
 
+        #print(self.sensor_cubes)
 
         self.numMotors = len(self.total_cubes)  # every joint will have a motor
         self.numSensors = len(self.sensor_cubes)
@@ -248,7 +269,7 @@ class SOLUTION:
             pyrosim.Send_Sensor_Neuron(name = i, linkName = sensor)
             all_sensors.append((i,sensor))
 
-        self.total_cubes.remove('Torso')
+        # self.total_cubes.remove('Torso')
         self.total_cubes.sort()
         for j, motor in enumerate(self.joint_names):
             # print(j, motor)
@@ -263,7 +284,10 @@ class SOLUTION:
             for currentColumn in range(self.numMotors):
                 pyrosim.Send_Synapse(sourceNeuronName = currentRow, targetNeuronName = currentColumn + self.numSensors, weight = self.weights[currentRow][currentColumn])
 
-
+        # print(self.cubes_b1)
+        # print(self.cubes_b2)
+        # print(self.cubes_b3)
+        # print(self.joint_names)
         pyrosim.End()
 
 
@@ -280,6 +304,7 @@ class SOLUTION:
         if brain_body_coin == 1:
             
             add_remove = rand.randint(0,1)
+            change_size = rand.randint(0,1)
             
             ### removal working
             if add_remove == 0: # remove a link
@@ -319,6 +344,9 @@ class SOLUTION:
             #         if body_coin == 3 & self.num_segments_3 < 4:
             #             self.num_segments_3 = self.num_segments_3 + 1
             #             ## blah blah add
+
+            ## Change Size
+
 
        
        
