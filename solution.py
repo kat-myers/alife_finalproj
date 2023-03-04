@@ -117,7 +117,12 @@ class SOLUTION:
             if self.cube_sensors_b3[i] == True:
                 self.sensor_cubes.append(self.cubes_b3[i])
     
-
+        # self.numMotors = len(self.total_cubes)  # every joint will have a motor
+        # self.numSensors = len(self.sensor_cubes)
+        # print('numMotors', str(self.numMotors))
+        # print('numSensors', str(self.numSensors))
+        # self.weights = np.random.rand(self.numSensors, self.numMotors) * 2 - 1
+        self.weights = np.random.rand(10,10) * 2 - 1
       
 
     def Set_ID(self, val): 
@@ -253,13 +258,10 @@ class SOLUTION:
                 pyrosim.Send_Joint(name = "k"+str(n)+'_'+ "k"+str(n+1), parent = "k"+str(n), child = "k"+str(n+1), type = "revolute", position = [0,0,self.cube_sizes_b3[n][2]], jointAxis = "1 0 0", rpy = 1)
             n = n + 1
 
+        # self.numMotors = len(self.total_cubes)  # every joint will have a motor
+        # self.numSensors = len(self.sensor_cubes)
 
-        #print(self.sensor_cubes)
-
-        self.numMotors = len(self.total_cubes)  # every joint will have a motor
-        self.numSensors = len(self.sensor_cubes)
-
-        self.weights = np.random.rand(self.numSensors, self.numMotors) * 2 - 1
+        #self.weights = np.random.rand(self.numSensors, self.numMotors) * 2 - 1
 
         pyrosim.End()
 
@@ -270,7 +272,12 @@ class SOLUTION:
 
         all_sensors = []
         all_motors = []
-        
+
+        numMotors = len(self.total_cubes)  # every joint will have a motor
+        numSensors = len(self.sensor_cubes)
+        #self.weights = np.random.rand(numSensors, numMotors) * 2 - 1
+
+        ### need to remove self dependencies in brain so that its reproducible, but need the correct size of sensors and motors
         for i,sensor in enumerate(self.sensor_cubes):
             pyrosim.Send_Sensor_Neuron(name = i, linkName = sensor)
             all_sensors.append((i,sensor))
@@ -281,15 +288,12 @@ class SOLUTION:
             if motor == 'Torso':
                 pass
             else:
-                pyrosim.Send_Motor_Neuron(name = j + self.numSensors , jointName = self.joint_names[j])
+                pyrosim.Send_Motor_Neuron(name = j + numSensors , jointName = self.joint_names[j])
 
         # all pairs of neurons must have synapses:
-        iterate = 0
-        for currentRow in range(self.numSensors):
-            for currentColumn in range(self.numMotors):
-                iterate = iterate + 1
-                print('iterate', str(iterate))
-                pyrosim.Send_Synapse(sourceNeuronName = currentRow, targetNeuronName = currentColumn + self.numSensors, weight = self.weights[currentRow][currentColumn])
+        for currentRow in range(numSensors):
+            for currentColumn in range(numMotors):
+                pyrosim.Send_Synapse(sourceNeuronName = currentRow, targetNeuronName = currentColumn + numSensors, weight = self.weights[currentRow][currentColumn])
 
         print('cubes and sensors, brain')
         print(self.sensor_cubes)
@@ -299,50 +303,80 @@ class SOLUTION:
         #print(self.joint_names)
         print(all_sensors)
         print('end')
+        
+        
+        # for i,sensor in enumerate(self.sensor_cubes):
+        #     pyrosim.Send_Sensor_Neuron(name = i, linkName = sensor)
+        #     all_sensors.append((i,sensor))
+
+        # # self.total_cubes.remove('Torso')
+        # self.total_cubes.sort()
+        # for j, motor in enumerate(self.joint_names):
+        #     if motor == 'Torso':
+        #         pass
+        #     else:
+        #         pyrosim.Send_Motor_Neuron(name = j + self.numSensors , jointName = self.joint_names[j])
+
+        # # all pairs of neurons must have synapses:
+        # iterate = 0
+        # for currentRow in range(self.numSensors):
+        #     for currentColumn in range(self.numMotors):
+        #         iterate = iterate + 1
+        #         print('iterate', str(iterate))
+        #         pyrosim.Send_Synapse(sourceNeuronName = currentRow, targetNeuronName = currentColumn + self.numSensors, weight = self.weights[currentRow][currentColumn])
+
+        # print('cubes and sensors, brain')
+        # print(self.sensor_cubes)
+        # print(self.cubes_b1)
+        # print(self.cubes_b2)
+        # print(self.cubes_b3)
+        # #print(self.joint_names)
+        # print(all_sensors)
+        # print('end')
         pyrosim.End()
 
 
     def Mutate(self):
       
-        col = rand.randint(0,self.numMotors) - 1
-        row = rand.randint(0,self.numSensors) - 1
-        self.weights[row][col] = rand.random() * 2 - 1
+        # col = rand.randint(0,self.numMotors) - 1
+        # row = rand.randint(0,self.numSensors) - 1
+        # self.weights[row][col] = rand.random() * 2 - 1
 
-        # roll a die
+        # # roll a die
         brain_body_coin = random.randint(0,2) # 0 means no change, 1 means chain body, 2 means change brain
 
-        # change body
-        if brain_body_coin == 1:
+        # # change body
+        # if brain_body_coin == 1:
             
-            add_remove = rand.randint(0,1)
-            change_size = rand.randint(0,1)
+        #     add_remove = rand.randint(0,1)
+        #     change_size = rand.randint(0,1)
             
-            ### removal working
-            if add_remove == 0: # remove a link
-                body_coin = random.randint(1,3)
-                if body_coin == 1 & self.num_segments_1 > 1:
-                    self.num_segments_1 = self.num_segments_1 - 1
-                    if self.cubes_b1[-1] in self.sensor_cubes:
-                        self.total_cubes.remove(self.cubes_b1[-1])
-                    if self.cubes_b1[-1] in self.total_cubes:
-                        self.sensor_cubes.remove(self.cubes_b1[-1])
-                    self.cubes_b1.remove(self.cubes_b1[-1])
+        #     ### removal working
+        #     if add_remove == 0: # remove a link
+        #         body_coin = random.randint(1,3)
+        #         if body_coin == 1 & self.num_segments_1 > 1:
+        #             self.num_segments_1 = self.num_segments_1 - 1
+        #             if self.cubes_b1[-1] in self.sensor_cubes:
+        #                 self.sensor_cubes.remove(self.cubes_b1[-1])
+        #             if self.cubes_b1[-1] in self.total_cubes:
+        #                 self.total_cubes.remove(self.cubes_b1[-1])
+        #             self.cubes_b1.remove(self.cubes_b1[-1])
                 
-                if body_coin == 2 & self.num_segments_2 > 1:
-                    self.num_segments_2 = self.num_segments_2 - 1
-                    if self.cubes_b2[-1] in self.sensor_cubes:
-                        self.total_cubes.remove(self.cubes_b2[-1])
-                    if self.cubes_b2[-1] in self.total_cubes:
-                        self.sensor_cubes.remove(self.cubes_b2[-1])
-                    self.cubes_b2.remove(self.cubes_b2[-1])
+        #         if body_coin == 2 & self.num_segments_2 > 1:
+        #             self.num_segments_2 = self.num_segments_2 - 1
+        #             if self.cubes_b2[-1] in self.sensor_cubes:
+        #                 self.sensor_cubes.remove(self.cubes_b2[-1])
+        #             if self.cubes_b2[-1] in self.total_cubes:
+        #                 self.total_cubes.remove(self.cubes_b2[-1])
+        #             self.cubes_b2.remove(self.cubes_b2[-1])
                 
-                if body_coin == 3 & self.num_segments_3 > 1:
-                    self.num_segments_3 = self.num_segments_3 - 1
-                    if self.cubes_b3[-1] in self.sensor_cubes:
-                        self.total_cubes.remove(self.cubes_b3[-1])
-                    if self.cubes_b3[-1] in self.total_cubes:
-                        self.sensor_cubes.remove(self.cubes_b3[-1])
-                    self.cubes_b2.remove(self.cubes_b2[-1])
+        #         if body_coin == 3 & self.num_segments_3 > 1:
+        #             self.num_segments_3 = self.num_segments_3 - 1
+        #             if self.cubes_b3[-1] in self.sensor_cubes:
+        #                 self.sensor_cubes.remove(self.cubes_b3[-1])
+        #             if self.cubes_b3[-1] in self.total_cubes:
+        #                 self.total_cubes.remove(self.cubes_b3[-1])
+        #             self.cubes_b2.remove(self.cubes_b2[-1])
 
                     #     if add_remove == 1: # add a link
             #         body_coin = random.randint(1,3)
@@ -357,9 +391,3 @@ class SOLUTION:
             #             ## blah blah add
 
             ## Change Size
-
-
-    
-
-
-
