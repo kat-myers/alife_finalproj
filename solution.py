@@ -271,11 +271,9 @@ class SOLUTION:
         pyrosim.Start_NeuralNetwork("brain" + str(self.myID) + ".nndf")
 
         all_sensors = []
-        all_motors = []
 
         numMotors = len(self.total_cubes)  # every joint will have a motor
         numSensors = len(self.sensor_cubes)
-        #self.weights = np.random.rand(numSensors, numMotors) * 2 - 1
 
         ### need to remove self dependencies in brain so that its reproducible, but need the correct size of sensors and motors
         for i,sensor in enumerate(self.sensor_cubes):
@@ -295,44 +293,7 @@ class SOLUTION:
             for currentColumn in range(numMotors):
                 pyrosim.Send_Synapse(sourceNeuronName = currentRow, targetNeuronName = currentColumn + numSensors, weight = self.weights[currentRow][currentColumn])
 
-        print('cubes and sensors, brain')
-        print(self.sensor_cubes)
-        print(self.cubes_b1)
-        print(self.cubes_b2)
-        print(self.cubes_b3)
-        #print(self.joint_names)
-        print(all_sensors)
-        print('end')
         
-        
-        # for i,sensor in enumerate(self.sensor_cubes):
-        #     pyrosim.Send_Sensor_Neuron(name = i, linkName = sensor)
-        #     all_sensors.append((i,sensor))
-
-        # # self.total_cubes.remove('Torso')
-        # self.total_cubes.sort()
-        # for j, motor in enumerate(self.joint_names):
-        #     if motor == 'Torso':
-        #         pass
-        #     else:
-        #         pyrosim.Send_Motor_Neuron(name = j + self.numSensors , jointName = self.joint_names[j])
-
-        # # all pairs of neurons must have synapses:
-        # iterate = 0
-        # for currentRow in range(self.numSensors):
-        #     for currentColumn in range(self.numMotors):
-        #         iterate = iterate + 1
-        #         print('iterate', str(iterate))
-        #         pyrosim.Send_Synapse(sourceNeuronName = currentRow, targetNeuronName = currentColumn + self.numSensors, weight = self.weights[currentRow][currentColumn])
-
-        # print('cubes and sensors, brain')
-        # print(self.sensor_cubes)
-        # print(self.cubes_b1)
-        # print(self.cubes_b2)
-        # print(self.cubes_b3)
-        # #print(self.joint_names)
-        # print(all_sensors)
-        # print('end')
         pyrosim.End()
 
 
