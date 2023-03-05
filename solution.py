@@ -37,9 +37,9 @@ class SOLUTION:
         self.cubes_b2 = []
         self.cubes_b3 = []
 
-        # self.num_segments_1 = random.randint(0,3)
-        # self.num_segments_2 = random.randint(0,3)
-        # self.num_segments_3 = random.randint(0,3)
+        # self.num_segments_1 = random.randint(1,3)
+        # self.num_segments_2 = random.randint(1,3)
+        # self.num_segments_3 = random.randint(1,3)
 
         self.num_segments_1 = 2
         self.num_segments_2 = 2
@@ -84,14 +84,6 @@ class SOLUTION:
             self.torso_size[x] = random.uniform(.3,1) * 1.3
         # self.cube_sizes = random.uniform(.2,1) *.9
 
-        ### Initializing Cube Names
-        print('cubes, init')
-        print(self.cubes_b1)
-        print(self.cubes_b2)
-        print(self.cubes_b3)
-        print('end')
-        # print(self.total_cubes)
-
         
         ### Initializing Cube Sensoring
         self.cube_sensors_b1 = []
@@ -117,11 +109,6 @@ class SOLUTION:
             if self.cube_sensors_b3[i] == True:
                 self.sensor_cubes.append(self.cubes_b3[i])
     
-        # self.numMotors = len(self.total_cubes)  # every joint will have a motor
-        # self.numSensors = len(self.sensor_cubes)
-        # print('numMotors', str(self.numMotors))
-        # print('numSensors', str(self.numSensors))
-        # self.weights = np.random.rand(self.numSensors, self.numMotors) * 2 - 1
         self.weights = np.random.rand(10,10) * 2 - 1
       
 
@@ -258,11 +245,6 @@ class SOLUTION:
                 pyrosim.Send_Joint(name = "k"+str(n)+'_'+ "k"+str(n+1), parent = "k"+str(n), child = "k"+str(n+1), type = "revolute", position = [0,0,self.cube_sizes_b3[n][2]], jointAxis = "1 0 0", rpy = 1)
             n = n + 1
 
-        # self.numMotors = len(self.total_cubes)  # every joint will have a motor
-        # self.numSensors = len(self.sensor_cubes)
-
-        #self.weights = np.random.rand(self.numSensors, self.numMotors) * 2 - 1
-
         pyrosim.End()
 
     def Create_Brain(self):
@@ -298,57 +280,142 @@ class SOLUTION:
 
 
     def Mutate(self):
-      
-        # col = rand.randint(0,self.numMotors) - 1
-        # row = rand.randint(0,self.numSensors) - 1
-        # self.weights[row][col] = rand.random() * 2 - 1
 
         # # roll a die
         brain_body_coin = random.randint(0,2) # 0 means no change, 1 means chain body, 2 means change brain
 
-        # # change body
-        # if brain_body_coin == 1:
+        # change body
+        if brain_body_coin == 1:
             
-        #     add_remove = rand.randint(0,1)
-        #     change_size = rand.randint(0,1)
+            add_remove_size = rand.randint(0,3)
             
-        #     ### removal working
-        #     if add_remove == 0: # remove a link
-        #         body_coin = random.randint(1,3)
-        #         if body_coin == 1 & self.num_segments_1 > 1:
-        #             self.num_segments_1 = self.num_segments_1 - 1
-        #             if self.cubes_b1[-1] in self.sensor_cubes:
-        #                 self.sensor_cubes.remove(self.cubes_b1[-1])
-        #             if self.cubes_b1[-1] in self.total_cubes:
-        #                 self.total_cubes.remove(self.cubes_b1[-1])
-        #             self.cubes_b1.remove(self.cubes_b1[-1])
+            ### removal working
+            if add_remove_size == 0: # remove a link
+                print("Link Removed")
+                body_coin = random.randint(1,3)
+                if body_coin == 1 & self.num_segments_1 > 1:
+                    self.num_segments_1 = self.num_segments_1 - 1
+                    if self.cubes_b1[-1] in self.sensor_cubes:
+                        self.sensor_cubes.remove(self.cubes_b1[-1])
+                    if self.cubes_b1[-1] in self.total_cubes:
+                        self.total_cubes.remove(self.cubes_b1[-1])
+                    self.cubes_b1.remove(self.cubes_b1[-1])
+                    
+                    removal_index = []
+                    for i in range(len(self.joint_names)):
+                        if self.cubes_b1[-1] in self.joint_names[i]:
+                            removal_index.append(i)
+                    for val in reversed(removal_index):
+                        self.joint_names.remove(self.joint_names[val])
                 
-        #         if body_coin == 2 & self.num_segments_2 > 1:
-        #             self.num_segments_2 = self.num_segments_2 - 1
-        #             if self.cubes_b2[-1] in self.sensor_cubes:
-        #                 self.sensor_cubes.remove(self.cubes_b2[-1])
-        #             if self.cubes_b2[-1] in self.total_cubes:
-        #                 self.total_cubes.remove(self.cubes_b2[-1])
-        #             self.cubes_b2.remove(self.cubes_b2[-1])
+                if body_coin == 2 & self.num_segments_2 > 1:
+                    self.num_segments_2 = self.num_segments_2 - 1
+                    if self.cubes_b2[-1] in self.sensor_cubes:
+                        self.sensor_cubes.remove(self.cubes_b2[-1])
+                    if self.cubes_b2[-1] in self.total_cubes:
+                        self.total_cubes.remove(self.cubes_b2[-1])
+                    self.cubes_b2.remove(self.cubes_b2[-1])
+                    
+                    removal_index = []
+                    for i in range(len(self.joint_names)):
+                        if self.cubes_b2[-1] in self.joint_names[i]:
+                            removal_index.append(i)
+                    for val in reversed(removal_index):
+                        self.joint_names.remove(self.joint_names[val])
                 
-        #         if body_coin == 3 & self.num_segments_3 > 1:
-        #             self.num_segments_3 = self.num_segments_3 - 1
-        #             if self.cubes_b3[-1] in self.sensor_cubes:
-        #                 self.sensor_cubes.remove(self.cubes_b3[-1])
-        #             if self.cubes_b3[-1] in self.total_cubes:
-        #                 self.total_cubes.remove(self.cubes_b3[-1])
-        #             self.cubes_b2.remove(self.cubes_b2[-1])
+                if body_coin == 3 & self.num_segments_3 > 1:
+                    self.num_segments_3 = self.num_segments_3 - 1
+                    if self.cubes_b3[-1] in self.sensor_cubes:
+                        self.sensor_cubes.remove(self.cubes_b3[-1])
+                    if self.cubes_b3[-1] in self.total_cubes:
+                        self.total_cubes.remove(self.cubes_b3[-1])
+                    self.cubes_b2.remove(self.cubes_b2[-1])
+                    
+                    removal_index = []
+                    for i in range(len(self.joint_names)):
+                        if self.cubes_b3[-1] in self.joint_names[i]:
+                            removal_index.append(i)
+                    for val in reversed(removal_index):
+                        self.joint_names.remove(self.joint_names[val])
 
-                    #     if add_remove == 1: # add a link
-            #         body_coin = random.randint(1,3)
-            #         if body_coin == 1 & self.num_segments_1 < 4:
-            #             self.num_segments_1 = self.num_segments_1 + 1
-            #             ## blah blah add
-            #         if body_coin == 2 & self.num_segments_2 < 4:
-            #             self.num_segments_2 = self.num_segments_2 + 1
-            #             ## blah blah add
-            #         if body_coin == 3 & self.num_segments_3 < 4:
-            #             self.num_segments_3 = self.num_segments_3 + 1
-            #             ## blah blah add
+            if add_remove_size == 1: # add a link
+                print("Link Added")
+                body_coin = random.randint(1,3)
 
-            ## Change Size
+                if body_coin == 1 and self.num_segments_1 < 4:
+
+                    i = self.num_segments_1 # n will be value of cube
+                    self.cube_size_rand =  [random.uniform(.2,1),random.uniform(.2,1),random.uniform(.2,1)]
+                    self.cube_sizes_b1.append(self.cube_size_rand)
+                    self.cubes_b1.append("i" + str(i))
+                    self.total_cubes.append("i" + str(i))
+                    self.joint_names.append("i"+str(i-1)+'_'+ "i"+str(i))
+                    
+                    cube_sense = random.choice((True,False))
+                    self.cube_sensors_b1.append(cube_sense)
+                    if self.cube_sensors_b1[i-1] == True:
+                        self.sensor_cubes.append(self.cubes_b1[i-1])
+                    self.num_segments_1 = self.num_segments_1 + 1
+                
+                if body_coin == 2 and self.num_segments_2 < 4:
+                    i = self.num_segments_2 # n will be value of cube
+                    self.cube_size_rand =  [random.uniform(.2,1),random.uniform(.2,1),random.uniform(.2,1)]
+                    self.cube_sizes_b2.append(self.cube_size_rand)
+                    self.cubes_b1.append("j" + str(i))
+                    self.total_cubes.append("j" + str(i))
+                    self.joint_names.append("j"+str(i-1)+'_'+ "j"+str(i))
+                    
+                    cube_sense = random.choice((True,False))
+                    self.cube_sensors_b2.append(cube_sense)
+                    if self.cube_sensors_b2[i-1] == True:
+                        self.sensor_cubes.append(self.cubes_b2[i-1])
+                    self.num_segments_2 = self.num_segments_2 + 1
+
+                if body_coin == 3 and self.num_segments_3 < 4:
+                    i = self.num_segments_3 # n will be value of cube
+                    self.cube_size_rand =  [random.uniform(.2,1),random.uniform(.2,1),random.uniform(.2,1)]
+                    self.cube_sizes_b3.append(self.cube_size_rand)
+                    self.cubes_b3.append("k" + str(i))
+                    self.total_cubes.append("k" + str(i))
+                    self.joint_names.append("k"+str(i-1)+'_'+ "k"+str(i))
+                                            
+                    cube_sense = random.choice((True,False))
+                    self.cube_sensors_b3.append(cube_sense)
+                    if self.cube_sensors_b3[i-1] == True:
+                        self.sensor_cubes.append(self.cubes_b3[i-1])
+                    self.num_segments_3 = self.num_segments_3 + 1
+        ## Change Size
+            if add_remove_size == 3:
+                "Link Increased Size"
+                # pick a random value in a branch
+                # change the size \
+                body_coin = random.randint(1,3)
+                if body_coin == 1:
+                    rand_n = random.randint(0,2)
+                    for i in range(2):
+                        self.cube_sizes_b1[rand_n][i] = self.cube_sizes_b1[rand_n][i] *1.1
+                if body_coin == 2:
+                    rand_n = random.randint(0,2)
+                    for i in range(2):
+                        self.cube_sizes_b2[rand_n][i] = self.cube_sizes_b2[rand_n][i] *1.1
+                if body_coin == 3:
+                    rand_n = random.randint(0,2)
+                    for i in range(2):
+                        self.cube_sizes_b3[rand_n][i] = self.cube_sizes_b3[rand_n][i] *1.1
+            if add_remove_size == 4:
+                body_coin = random.randint(1,3)
+                print("Link Decreased Size")
+                if body_coin == 1:
+                    rand_n = random.randint(0,2)
+                    for i in range(2):
+                        self.cube_sizes_b1[rand_n][i] = self.cube_sizes_b1[rand_n][i] *.9
+                if body_coin == 2:
+                    rand_n = random.randint(0,2)
+                    for i in range(2):
+                        self.cube_sizes_b2[rand_n][i] = self.cube_sizes_b2[rand_n][i] *.9
+                if body_coin == 3:
+                    rand_n = random.randint(0,2)
+                    for i in range(2):
+                        self.cube_sizes_b3[rand_n][i] = self.cube_sizes_b3[rand_n][i] *.9
+
+        
