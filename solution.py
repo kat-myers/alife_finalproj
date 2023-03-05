@@ -37,9 +37,11 @@ class SOLUTION:
         self.cubes_b2 = []
         self.cubes_b3 = []
 
-        # self.num_segments_1 = random.randint(1,3)
-        # self.num_segments_2 = random.randint(1,3)
-        # self.num_segments_3 = random.randint(1,3)
+        self.max_seg_size = 4
+
+        # self.num_segments_1 = random.randint(1,self.max_seg_size)
+        # self.num_segments_2 = random.randint(1,self.max_seg_size)
+        # self.num_segments_3 = random.randint(1,self.max_seg_size)
 
         self.num_segments_1 = 2
         self.num_segments_2 = 2
@@ -188,7 +190,7 @@ class SOLUTION:
             # relative to previous joint
             cube_position = [self.cube_sizes_b1[n][0]/2,self.cube_sizes_b1[n][1]/2,self.cube_sizes_b1[n][2]/2]
             # cube_position = [np.random.uniform(-1,1)*size_dummy_1[0]/2,size_dummy_1[1]/2,np.random.uniform(-1,1)*size_dummy_1[2]/2]
-            pyrosim.Send_Cube(color_code = color_code, color_name = color_name,name = "i"+str(n), pos=cube_position , size=self.cube_sizes_b1[n])
+            pyrosim.Send_Cube(color_code = red_code, color_name = red_name,name = "i"+str(n), pos=cube_position , size=self.cube_sizes_b1[n])
             if n < self.num_segments_1 - 1:
                 # relative to previous joint
                 pyrosim.Send_Joint(name = "i"+str(n)+'_'+ "i"+str(n+1), parent = "i"+str(n), child = "i"+str(n+1), type = "revolute", position = [0,self.cube_sizes_b1[n][1],0], jointAxis = "1 0 0", rpy = 1)
@@ -342,7 +344,7 @@ class SOLUTION:
                 print("Link Added")
                 body_coin = random.randint(1,3)
 
-                if body_coin == 1 and self.num_segments_1 < 4:
+                if body_coin == 1 and self.num_segments_1 < self.max_seg_size:
 
                     i = self.num_segments_1 # n will be value of cube
                     self.cube_size_rand =  [random.uniform(.2,1),random.uniform(.2,1),random.uniform(.2,1)]
@@ -357,7 +359,7 @@ class SOLUTION:
                         self.sensor_cubes.append(self.cubes_b1[i-1])
                     self.num_segments_1 = self.num_segments_1 + 1
                 
-                if body_coin == 2 and self.num_segments_2 < 4:
+                if body_coin == 2 and self.num_segments_2 < self.max_seg_size:
                     i = self.num_segments_2 # n will be value of cube
                     self.cube_size_rand =  [random.uniform(.2,1),random.uniform(.2,1),random.uniform(.2,1)]
                     self.cube_sizes_b2.append(self.cube_size_rand)
@@ -371,7 +373,7 @@ class SOLUTION:
                         self.sensor_cubes.append(self.cubes_b2[i-1])
                     self.num_segments_2 = self.num_segments_2 + 1
 
-                if body_coin == 3 and self.num_segments_3 < 4:
+                if body_coin == 3 and self.num_segments_3 < self.max_seg_size:
                     i = self.num_segments_3 # n will be value of cube
                     self.cube_size_rand =  [random.uniform(.2,1),random.uniform(.2,1),random.uniform(.2,1)]
                     self.cube_sizes_b3.append(self.cube_size_rand)
@@ -384,9 +386,9 @@ class SOLUTION:
                     if self.cube_sensors_b3[i-1] == True:
                         self.sensor_cubes.append(self.cubes_b3[i-1])
                     self.num_segments_3 = self.num_segments_3 + 1
-        ## Change Size
+            ## Change Size
             if add_remove_size == 3:
-                "Link Increased Size"
+                print("Link Increased Size")
                 # pick a random value in a branch
                 # change the size \
                 body_coin = random.randint(1,3)
@@ -417,5 +419,9 @@ class SOLUTION:
                     rand_n = random.randint(0,2)
                     for i in range(2):
                         self.cube_sizes_b3[rand_n][i] = self.cube_sizes_b3[rand_n][i] *.9
+            
+        # if brain_body_coin == 0:
+            # add, remove sensor
+            # add, remove synapse
 
         

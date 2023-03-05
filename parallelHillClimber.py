@@ -75,8 +75,6 @@ class PARALLEL_HILL_CLIMBER:
                 self.parents[i] = self.children[i]
         
        
-
-
     def Print(self):
         #for i,key in enumerate(self.parents):
             #print('\n',i, self.parents[i].fitness, self.children[i].fitness,'\n')

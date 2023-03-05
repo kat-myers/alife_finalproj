@@ -18,7 +18,7 @@ b = np.pi/2
 targPos = (b-a) * random.random() + a
 
 
-numberOfGenerations = 5
+numberOfGenerations = 10
 populationSize = 1
 
 # numMotorNeurons = random.randint(1,7)

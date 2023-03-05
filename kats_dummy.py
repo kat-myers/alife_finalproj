@@ -22,8 +22,6 @@ if body_coin == 1:
     print(rand_n)
     for i in range(2):
         cube_sizes_b1[rand_n][i] = cube_sizes_b1[rand_n][i] *.5
-
-
 print(cube_sizes_b1)
 
 
