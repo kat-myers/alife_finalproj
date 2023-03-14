@@ -6,6 +6,13 @@ Below is a teaser gif of my robots, as well as some example runs of generations 
 ![example](https://user-images.githubusercontent.com/122335561/225115261-3bdf255d-132b-4afe-9d8f-265583b7eee7.png)
 The fitness that I evaluated was the distance that the robots were able to move away in the negative y-direction. We can see that, for most of the simulation, very little successful evolution occcurs. The fitness curves plateau because, after a certain optimum is reached, any subsequent mutation is most likely to be deleterious than beneficial. However, occasionally, a positive mutation occurs. 
 
+Over time, I think that the biggest impact in movement was the sensor location and the motor weight. It did not really matter where the cubes were located as long as some appendage cubes were touching and sensing the ground, and could therefore control when the motor responded. This resulted in more coordinated movement, rather than the random jerking around that could be seen in unevolved robots. Additionally, changing motor weights allowed for movement coordination as well. 
+
+I think a big hindrance in my evolved robots were that, they could be great for movement given one very specific orientation, but if there was the slightest overexertion from a motor, then the robot would flip or change orientation and suddenly couldn't move. So even though a robot could be highly designed to move well, they were prone to poor performance because they couldn't stay flat on the ground, like a car that tends to flip over. I think I could change this by making the torso somehow heavier than the rest of the body, so that this center of mass would be harder for an individual joint motor to flip. 
+For example, this seal-like creature only worked when he fell over and moved on his flippers, but just randomly jerked around until that happened
+![def_evo_gif](https://user-images.githubusercontent.com/122335561/225124402-06b7bed8-f053-4b0b-b99a-8772404988fe.gif)
+
+
 ## Background
 ## How Creatures Are Generated
 ### This code is found in the solution.py file
