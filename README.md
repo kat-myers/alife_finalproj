@@ -55,6 +55,8 @@ If the body is mutated, another coin chooses if a segment is added, removed, or 
 
 ## The Parallel Hill Climber
 The parallel hill climber enables us to run the simulation over multiple generations with different populations moving, reproducing, and evolving in parallel. It seeds a simulation with the set population and their genotypes, then evolves them by calling the mutation function for each child. After the children are created, the fitness of a parent and child pair is compared. If the child was able to move farther than the parent, then the child reproduces, and the parent does not, or vice versa. The parallel hill climber also saves the best fitnesses of each generation to a text file for the creation of growth curves.
+<img width="1061" alt="PHC" src="https://user-images.githubusercontent.com/122335561/225103978-038e35a2-4b1d-482a-a287-712d49835563.png">
+
 
 This is repeated for a certain number of generations with a certain population
 size in each, defined in my constants.py file.
