@@ -12,6 +12,9 @@ I think a big hindrance in my evolved robots were that, they could be great for 
 For example, this seal-like creature only worked when he fell over and moved on his flippers, but just randomly jerked around until that happened
 ![def_evo_gif](https://user-images.githubusercontent.com/122335561/225124402-06b7bed8-f053-4b0b-b99a-8772404988fe.gif)
 
+## Here is a link to a preview video:
+https://youtu.be/r3AXp2UNxFo
+
 
 ## Background
 ## How Creatures Are Generated
