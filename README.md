@@ -1,8 +1,8 @@
 
-# Welcome to the 3D Random-Generated, Randomly-Evolved Creatures Update!
+# Kat Myers Final Project: The Artist
 ## How Creatures Are Generated
-In the latest update, I create 3D, randomly-generated creatures. Each creature consists of a root link, called a torso, and has the opportunity to 
-generate 0 to 4 segments coming from each branching point from the torso. The creatures can have 0 to 4 branching points, which are connected via joints at random
+In this project, I create 3D, randomly-generated creatures. Each creature consists of a root link, called a torso, and has the opportunity to 
+generate 0 to 3 segments coming from each branching point from the torso. The creatures can have 0 to n branching points, which are connected via joints at random
 values along the face of the torso. A diagram for how these creatures are generated is shown below:
 ![A7_Creature_Generation](https://user-images.githubusercontent.com/122335561/220019495-a9e14a35-746b-4593-9f92-f7327993776e.png)
 (inspiration for diagram from Karl Sims)
