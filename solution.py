@@ -193,7 +193,7 @@ class SOLUTION:
             pyrosim.Send_Cube(color_code = red_code, color_name = red_name,name = "i"+str(n), pos=cube_position , size=self.cube_sizes_b1[n])
             if n < self.num_segments_1 - 1:
                 # relative to previous joint
-                pyrosim.Send_Joint(name = "i"+str(n)+'_'+ "i"+str(n+1), parent = "i"+str(n), child = "i"+str(n+1), type = "revolute", position = [0,self.cube_sizes_b1[n][1],0], jointAxis = "1 0 0", rpy = 1)
+                pyrosim.Send_Joint(name = "i"+str(n)+'_'+ "i"+str(n+1), parent = "i"+str(n), child = "i"+str(n+1), type = "revolute", position = [self.cube_sizes_b1[n][0],self.cube_sizes_b1[n][1],0], jointAxis = "1 0 0", rpy = 1)
             n = n + 1
         
 
