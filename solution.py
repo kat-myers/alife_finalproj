@@ -190,7 +190,7 @@ class SOLUTION:
             # relative to previous joint
             cube_position = [self.cube_sizes_b1[n][0]/2,self.cube_sizes_b1[n][1]/2,self.cube_sizes_b1[n][2]/2]
             # cube_position = [np.random.uniform(-1,1)*size_dummy_1[0]/2,size_dummy_1[1]/2,np.random.uniform(-1,1)*size_dummy_1[2]/2]
-            pyrosim.Send_Cube(color_code = red_code, color_name = red_name,name = "i"+str(n), pos=cube_position , size=self.cube_sizes_b1[n])
+            pyrosim.Send_Cube(color_code = color_code, color_name = color_name,name = "i"+str(n), pos=cube_position , size=self.cube_sizes_b1[n])
             if n < self.num_segments_1 - 1:
                 # relative to previous joint
                 pyrosim.Send_Joint(name = "i"+str(n)+'_'+ "i"+str(n+1), parent = "i"+str(n), child = "i"+str(n+1), type = "revolute", position = [self.cube_sizes_b1[n][0],self.cube_sizes_b1[n][1],0], jointAxis = "1 0 0", rpy = 1)
