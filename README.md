@@ -1,7 +1,14 @@
 
 # Kat Myers Final Project: The Artist
+## Preview and Results
+Below is a teaser gif of my robots, as well as some example runs of generations between 25-100, with populations of 10 each:
+
+![example](https://user-images.githubusercontent.com/122335561/225115261-3bdf255d-132b-4afe-9d8f-265583b7eee7.png)
+The fitness that I evaluated was the distance that the robots were able to move away in the negative y-direction. We can see that, for most of the simulation, very little successful evolution occcurs. The fitness curves plateau because, after a certain optimum is reached, any subsequent mutation is most likely to be deleterious than beneficial. However, occasionally, a positive mutation occurs. 
+
 ## Background
 ## How Creatures Are Generated
+### This code is found in the solution.py file
 In this project, I create 3D, randomly-generated creatures. Each creature consists of a root link, called a torso, and has the opportunity to 
 generate 0 to 3 segments coming from each branching point from the torso. The creatures can have 0 to n branching points, which are connected via joints at random
 values along the face of the torso. A diagram for how these creatures are generated is shown below:
@@ -54,6 +61,7 @@ If the body is mutated, another coin chooses if a segment is added, removed, or 
 <img width="1050" alt="mutation diagram" src="https://user-images.githubusercontent.com/122335561/225100028-1bf600e4-79b1-4728-8a1b-52146cd53f9a.png">
 
 ## The Parallel Hill Climber
+### this code is found in the parallelHillClimber.py file
 The parallel hill climber enables us to run the simulation over multiple generations with different populations moving, reproducing, and evolving in parallel. It seeds a simulation with the set population and their genotypes, then evolves them by calling the mutation function for each child. After the children are created, the fitness of a parent and child pair is compared. If the child was able to move farther than the parent, then the child reproduces, and the parent does not, or vice versa. The parallel hill climber also saves the best fitnesses of each generation to a text file for the creation of growth curves.
 <img width="1061" alt="PHC" src="https://user-images.githubusercontent.com/122335561/225103978-038e35a2-4b1d-482a-a287-712d49835563.png">
 
