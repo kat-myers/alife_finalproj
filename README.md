@@ -60,6 +60,8 @@ Each creature's joints contain a motor neuron, and each link has a 50% chance of
 and sensor neurons are connected via synapses. However, no connections are present between the different branches in this iteration. This allows for isolated
 bevahior within each branch, which might make coordinated movement more difficult for my creatures.
 
+<img width="810" alt="brain mutation" src="https://user-images.githubusercontent.com/122335561/225394817-95575fc5-2fc6-4756-aa4f-912b6d50ee08.png">
+
 ## Evolution
 The creatures are given an opportunity to evolve. This is done by beginnning a population
 with randomly generated creatures, and evaluating the fitness, defined as the ability of the
